@@ -464,23 +464,48 @@
 			</div>
 		{/if}
 	</div>
-{:else if authenticated}
-	<!-- Nothing Playing -->
-	<div class="kiosk bg-black">
-		<div class="flex flex-col items-center gap-4">
-			<div class="eq-bars paused" style="height:32px;">
+{:else}
+	<!-- Idle / Offline Screensaver -->
+	<div class="screensaver">
+		<div class="screensaver-bg"></div>
+		<div class="screensaver-noise"></div>
+		<div class="screensaver-stars"></div>
+		<div class="screensaver-orbit screensaver-orbit-a"></div>
+		<div class="screensaver-orbit screensaver-orbit-b"></div>
+		<div class="screensaver-glow"></div>
+		<div class="dvd-bounce-x">
+			<div class="dvd-bounce-y">
+				<div class="dvd-logo">
+					<svg class="dvd-logo-icon" viewBox="0 0 496 512" role="img" aria-label="Spotify icon">
+						<path
+							fill="#1ed760"
+							d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8Z"
+						/>
+						<path
+							fill="#111"
+							d="M406.6 231.1c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3zm-31 76.2c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm-26.9 65.6c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4z"
+						/>
+					</svg>
+				</div>
+			</div>
+		</div>
+
+		<div class="screensaver-content">
+			<div class="screensaver-badge">{authenticated ? 'Idle mode' : 'Offline mode'}</div>
+
+			<div class="eq-bars" style="height: 30px;">
 				<span></span><span></span><span></span><span></span>
 			</div>
-			<p class="font-outfit text-2xl font-light tracking-wide text-white/40">
-				Nothing is playing
+
+			<p class="screensaver-title">
+				{authenticated ? 'Nothing is playing' : 'Could not connect to Spotify'}
 			</p>
-			<p class="font-outfit text-base text-white/20">Start playing on any Spotify device</p>
+			<p class="screensaver-subtitle">
+				{authenticated
+					? 'Start playback on any Spotify device to wake the display.'
+					: 'Reconnect to Spotify to resume live playback.'}
+			</p>
 		</div>
-	</div>
-{:else}
-	<!-- Auth Failed -->
-	<div class="kiosk bg-black">
-		<p class="font-outfit text-2xl font-light text-white/40">Could not connect to Spotify</p>
 	</div>
 {/if}
 
@@ -518,7 +543,12 @@
 	.bg-layer {
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(145deg, var(--bg-dark) 0%, var(--bg-mid) 55%, var(--bg-accent) 100%);
+		background: linear-gradient(
+			145deg,
+			var(--bg-dark) 0%,
+			var(--bg-mid) 55%,
+			var(--bg-accent) 100%
+		);
 		transition: background 2s ease;
 		z-index: 0;
 	}
@@ -972,5 +1002,260 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	/* ==================== IDLE SCREENSAVER ==================== */
+
+	.screensaver {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+		background: #050507;
+		color: white;
+	}
+
+	.screensaver-bg {
+		position: absolute;
+		inset: -20%;
+		background:
+			radial-gradient(circle at 20% 20%, rgba(29, 185, 84, 0.16), transparent 45%),
+			radial-gradient(circle at 80% 30%, rgba(116, 92, 255, 0.2), transparent 44%),
+			radial-gradient(circle at 50% 80%, rgba(52, 174, 255, 0.16), transparent 48%),
+			linear-gradient(135deg, #040406 0%, #0b0b12 50%, #050509 100%);
+		filter: saturate(115%);
+		animation: screensaverDrift 22s ease-in-out infinite alternate;
+		z-index: 0;
+	}
+
+	.screensaver-noise {
+		position: absolute;
+		inset: 0;
+		opacity: 0.05;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+		background-size: 128px 128px;
+		animation: screensaverNoise 0.25s steps(2) infinite;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.screensaver-stars {
+		position: absolute;
+		inset: -25%;
+		background-image:
+			radial-gradient(circle, rgba(255, 255, 255, 0.5) 1px, transparent 1.5px),
+			radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1.5px);
+		background-size:
+			120px 120px,
+			170px 170px;
+		background-position:
+			0 0,
+			40px 70px;
+		opacity: 0.4;
+		animation: screensaverStars 60s linear infinite;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	.screensaver-orbit {
+		position: absolute;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 999px;
+		filter: blur(0.3px);
+		z-index: 3;
+	}
+
+	.screensaver-orbit-a {
+		width: min(70vw, 640px);
+		height: min(70vw, 640px);
+		animation: screensaverSpin 40s linear infinite;
+	}
+
+	.screensaver-orbit-b {
+		width: min(54vw, 500px);
+		height: min(54vw, 500px);
+		animation: screensaverSpinReverse 28s linear infinite;
+	}
+
+	.screensaver-glow {
+		position: absolute;
+		width: min(34vw, 320px);
+		height: min(34vw, 320px);
+		border-radius: 50%;
+		background: radial-gradient(
+			circle,
+			rgba(29, 185, 84, 0.35) 0%,
+			rgba(93, 120, 255, 0.22) 45%,
+			rgba(0, 0, 0, 0) 72%
+		);
+		filter: blur(14px);
+		animation: screensaverPulse 4.8s ease-in-out infinite;
+		z-index: 4;
+	}
+
+	.dvd-bounce-x {
+		position: absolute;
+		inset: 24px;
+		animation: dvdBounceX 17s linear infinite alternate;
+		z-index: 4;
+		pointer-events: none;
+	}
+
+	.dvd-bounce-y {
+		position: absolute;
+		animation: dvdBounceY 12.8s linear infinite alternate;
+	}
+
+	.dvd-logo {
+		display: inline-block;
+		filter: drop-shadow(0 0 16px rgba(30, 215, 96, 0.45)) drop-shadow(0 0 26px rgba(0, 0, 0, 0.45));
+		animation: dvdHueShift 8s linear infinite;
+	}
+
+	.dvd-logo-icon {
+		display: block;
+		width: clamp(48px, 6vw, 72px);
+		height: clamp(48px, 6vw, 72px);
+	}
+
+	.screensaver-content {
+		position: relative;
+		z-index: 5;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		max-width: min(84vw, 760px);
+		padding: 32px 20px;
+		text-align: center;
+	}
+
+	.screensaver-badge {
+		padding: 6px 14px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.11em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.78);
+		backdrop-filter: blur(6px);
+	}
+
+	.screensaver-title {
+		margin: 0;
+		font-size: clamp(30px, 4.2vw, 58px);
+		font-weight: 700;
+		letter-spacing: -0.015em;
+		color: rgba(255, 255, 255, 0.94);
+		text-shadow: 0 0 28px rgba(0, 0, 0, 0.35);
+	}
+
+	.screensaver-subtitle {
+		margin: 0;
+		max-width: min(88vw, 620px);
+		font-size: clamp(13px, 1.6vw, 18px);
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.56);
+		letter-spacing: 0.01em;
+	}
+
+	@keyframes screensaverDrift {
+		0% {
+			transform: translate3d(-1%, -2%, 0) scale(1);
+		}
+		100% {
+			transform: translate3d(2%, 2%, 0) scale(1.06);
+		}
+	}
+
+	@keyframes screensaverNoise {
+		0% {
+			transform: translate(0, 0);
+		}
+		100% {
+			transform: translate(2px, -1px);
+		}
+	}
+
+	@keyframes screensaverStars {
+		0% {
+			transform: translate3d(0, 0, 0) rotate(0deg);
+		}
+		100% {
+			transform: translate3d(-130px, -90px, 0) rotate(6deg);
+		}
+	}
+
+	@keyframes screensaverSpin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes screensaverSpinReverse {
+		0% {
+			transform: rotate(360deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
+	}
+
+	@keyframes screensaverPulse {
+		0%,
+		100% {
+			transform: scale(0.86);
+			opacity: 0.72;
+		}
+		50% {
+			transform: scale(1.08);
+			opacity: 1;
+		}
+	}
+
+	@keyframes dvdBounceX {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(100vw - 150px));
+		}
+	}
+
+	@keyframes dvdBounceY {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(100vh - 150px));
+		}
+	}
+
+	@keyframes dvdHueShift {
+		from {
+			filter: hue-rotate(0deg);
+		}
+		to {
+			filter: hue-rotate(360deg);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dvd-bounce-x,
+		.dvd-bounce-y,
+		.screensaver-bg,
+		.screensaver-stars,
+		.screensaver-glow,
+		.eq-bars span {
+			animation: none !important;
+		}
 	}
 </style>
